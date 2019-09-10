@@ -1,9 +1,8 @@
-/******************************************************************************
-/           CODING CHALLENGE 7
-/******************************************************************************/
-    var questionN = 'question';
+(function() {
     var calcQuestionID =  Math.floor (Math.random() * 19);    
     var pickQuestionID = calcQuestionID;
+
+
 // console.log(pickQuestionID);
 var Question = function (questionID, content, correctAnswer, answer0, answer1, answer2, answer3) {
     this.content = content; 
@@ -16,21 +15,22 @@ var Question = function (questionID, content, correctAnswer, answer0, answer1, a
     
 }
     
-Question.prototype.newQuestion = function() {
-        
-        console.log('QUESTION ' + this.questionID + ': ' + this.content);
+Question.prototype.newQuestion = function() {       
+        console.log(this.content);
         console.log('1. '+this.answer0);
         console.log('2. '+this.answer1);
         console.log('3. '+this.answer2);
         console.log('4. '+this.answer3);
-        var promptBox = prompt('Please enter the correct answer:');
-        
-        if (promptBox == this.correctAnswer) {
+}
+
+Question.prototype.checkAnswer = function(ans) {        
+        if (ans === this.correctAnswer) {
             console.log('Correct answer!');
         } else  {
             console.log('Wrong answer!' + ' The correct answer is: ' + this.correctAnswer);   
         }
 }
+
 var question = [];
  question[0] = new Question (1, 'Magyars are the people of which country?', 3, 'Slovakia', 'Romania', 'Hungary', 'Moldova');
  question[1] = new Question (2, 'Pilbara is a region in which Australian state?', 1, 'Western Australia', 'Queensland', 'New South Wales', 'Tasmania');
@@ -54,3 +54,6 @@ var question = [];
 
 //question4.newQuestion();
 question[pickQuestionID].newQuestion();
+ var promptBox = parseInt(prompt('Please enter the correct answer:'));
+question[pickQuestionID].checkAnswer(promptBox);
+})();
