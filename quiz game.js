@@ -1,9 +1,18 @@
 (function() {
-    var calcQuestionID =  Math.floor (Math.random() * 19);    
-    var pickQuestionID = calcQuestionID;
 
+function score() {
+    var sc = 0;
+    return function(correct) {
+        if (correct) {
+         sc++;
+        } 
+        return sc;
+        }
+    }
 
-// console.log(pickQuestionID);
+    var keepScore = score();
+
+    
 var Question = function (questionID, content, correctAnswer, answer0, answer1, answer2, answer3) {
     this.content = content; 
     this.questionID = questionID;
@@ -11,8 +20,7 @@ var Question = function (questionID, content, correctAnswer, answer0, answer1, a
     this.answer0 = answer0;
     this.answer1 = answer1;
     this.answer2 = answer2;
-    this.answer3 = answer3;
-    
+    this.answer3 = answer3;    
 }
     
 Question.prototype.newQuestion = function() {       
@@ -23,13 +31,30 @@ Question.prototype.newQuestion = function() {
         console.log('4. '+this.answer3);
 }
 
-Question.prototype.checkAnswer = function(ans) {        
-        if (ans === this.correctAnswer) {
-            console.log('Correct answer!');
+Question.prototype.checkAnswer = function(ans, callback) {        
+    var sc;   
+    
+    if (ans === this.correctAnswer) {
+            console.log('Congratulations! ' + this.correctAnswer + ' is the correct answer!');
+            sc = callback(true);
         } else  {
-            console.log('Wrong answer!' + ' The correct answer is: ' + this.correctAnswer);   
+            console.log(ans + ' is the wrong answer!' + ' The correct answer is: ' + this.correctAnswer);   
+           
+            sc = callback(false);
         }
+            console.log('***************************************************************************************');
+
+            this.displayScore(sc);   
 }
+
+
+Question.prototype.displayScore = 
+    function(score) {
+    console.log ('Your current score is: ' + score);
+    console.log('***************************************************************************************');
+}
+
+
 
 var question = [];
  question[0] = new Question (1, 'Magyars are the people of which country?', 3, 'Slovakia', 'Romania', 'Hungary', 'Moldova');
@@ -52,8 +77,19 @@ var question = [];
  question[17] = new Question (18, 'Which of these countries is the largest (by size)?', 1, 'France', 'Spain', 'Germany', 'United Kingdom');
  question[18] = new Question (19, 'Which country has a land border with Belarus, Estonia, Lithuania and Russia?', 2, 'Poland', 'Latvia', 'Georgia', 'Finland');
 
-//question4.newQuestion();
-question[pickQuestionID].newQuestion();
- var promptBox = parseInt(prompt('Please enter the correct answer:'));
-question[pickQuestionID].checkAnswer(promptBox);
+function nextQuestion() {
+    var calcQuestionID =  Math.floor (Math.random() * 19);    
+    var pickQuestionID = calcQuestionID;
+    question[pickQuestionID].newQuestion();
+    var promptBox = prompt('Please enter the correct answer:');
+    if (promptBox !== 'exit') {
+        question[pickQuestionID].checkAnswer(parseInt(promptBox), keepScore); 
+        nextQuestion();
+    } else {
+        console.log('Thank you for playing!');
+    }   
+}
+    
+nextQuestion();
+    
 })();
